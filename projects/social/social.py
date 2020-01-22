@@ -1,3 +1,5 @@
+import random
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -43,10 +45,19 @@ class SocialGraph:
         self.users = {}
         self.friendships = {}
         # !!!! IMPLEMENT ME
-
+        total = num_users * avg_friendships / 2
+        start = self.last_id
+        # randomUser = random.randint(start, num_users - 1)
         # Add users
-
+        for i in range(0, 10):
+          self.add_user('name')
         # Create friendships
+        while total > 0:
+          user = random.randint(1, num_users - 1)
+          friend = random.randint(1, num_users - 1)
+          if user != friend and friend not in self.friendships[user] and user not in self.friendships[friend]:
+            self.add_friendship(user, friend)
+            total -= 1
 
     def get_all_social_paths(self, user_id):
         """
@@ -66,5 +77,6 @@ if __name__ == '__main__':
     sg = SocialGraph()
     sg.populate_graph(10, 2)
     print(sg.friendships)
-    connections = sg.get_all_social_paths(1)
-    print(connections)
+    # connections = sg.get_all_social_paths(1)
+    # print(connections)
+    # print(sg.users)
