@@ -1,3 +1,6 @@
+import random
+from util import Stack, Queue 
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -43,10 +46,17 @@ class SocialGraph:
         self.users = {}
         self.friendships = {}
         # !!!! IMPLEMENT ME
-
+        total = num_users * avg_friendships / 2
         # Add users
-
+        for i in range(0, 10):
+          self.add_user('name')
         # Create friendships
+        while total > 0:
+          user = random.randint(1, num_users - 1)
+          friend = random.randint(1, num_users - 1)
+          if user != friend and friend not in self.friendships[user] and user not in self.friendships[friend]:
+            self.add_friendship(user, friend)
+            total -= 1
 
     def get_all_social_paths(self, user_id):
         """
@@ -59,6 +69,38 @@ class SocialGraph:
         """
         visited = {}  # Note that this is a dictionary, not a set
         # !!!! IMPLEMENT ME
+
+        queue = Queue()
+
+        queue.enqueue(user_id)
+
+        while queue.size() > 0:
+          vertex = queue.dequeue()
+
+          if vertex not in visited:
+
+            if vertex == user_id:
+              visited[vertex] = [vertex]
+            elif user_id in self.friendships[vertex] and vertex not in visited:
+              visited[vertex] = [user_id, vertex]
+            else:
+              connections = self.friendships[vertex]
+              path = []
+              for c in connections:
+                if c in visited:
+                  if len(path) == 0:
+                    path = visited[c].copy()
+                  else:
+                    if len(path) > len(visited[c]):
+                      path = visited[c].copy()
+              path.append(vertex)
+              copy = path.copy()
+              visited[vertex] = copy
+              path = []
+
+            for next_vert in self.friendships[vertex]:
+                queue.enqueue(next_vert)
+
         return visited
 
 
@@ -68,3 +110,10 @@ if __name__ == '__main__':
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)
+    # s = set()
+    # s.add(5)
+    # s.add(7)
+    # s.add(8)
+    # for i in s:
+    #   print(i)
+ 
